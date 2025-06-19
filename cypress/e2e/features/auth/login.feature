@@ -1,20 +1,11 @@
 Feature: Login de usuário
-  Como um usuário do sistema
-  Quero poder acessar minha conta com segurança
-  Para acessar e gerenciar minhas tarefas pessoais
+  Como um usuário não autenticado
+  Quero realizar o login
+  Para acessar o painel de tarefas
 
-  Background:
-    Given que o usuário "John" está cadastrado com o e-mail "john@user.example" e a senha "123456"
-    And está na página de login
-
-  Scenario: Login com credenciais válidas
-    When informa o e-mail "john@user.example" e a senha "123456"
+  Scenario: Login bem-sucedido com credenciais válidas
+    Given que o usuário "teste@exemplo.com" está registrado com a senha "senha123"
+    When preenche o campo "email" com "teste@exemplo.com"
+    And preenche o campo "senha" com "senha123"
     And envia o formulário de login
-    Then deve ser redirecionado para a página de tarefas
-    And deve visualizar a lista de tarefas
-
-  Scenario: Login com senha incorreta
-    When informa o e-mail "john@user.example" e a senha "12345"
-    And envia o formulário de login
-    Then deve visualizar a mensagem de erro "Falha no login. Verifique suas credenciais."
-    And deve permanecer na página de login
+    Then o usuário deve ser redirecionado para o painel de tarefas

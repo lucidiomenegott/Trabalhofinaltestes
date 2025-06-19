@@ -60,3 +60,48 @@ describe('TaskController', () => {
         });
     });
 });
+
+describe('POST /api/tasks', () => {
+    it('deve retornar erro ao tentar criar tarefa sem título', async () => {
+        // Arrange (preparar)
+        const taskData = {
+            description: 'Essa é uma tarefa válida sem título',
+            completed: false,
+            priority: 'low',
+        };
+
+        // Act (agir)
+        const response = await request(app).post('/api/tasks').send(taskData);
+
+        // Assert (verificar)
+        expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST); // Espera erro de validação
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                message: 'Título é obrigatório', // Ou a mensagem específica de erro que sua API retorna
+            })
+        );
+    });
+});
+
+describe('POST /api/tasks', () => {
+    it('deve retornar erro ao tentar criar tarefa com prioridade inválida', async () => {
+        // Arrange (preparar)
+        const taskData = {
+            title: `Tarefa inválida ${new Date()}`,
+            description: 'Essa tarefa tem prioridade inválida',
+            completed: false,
+            priority: 'alta', // Valor inválido, pois o sistema espera um valor como 'low', 'medium', 'high'
+        };
+
+        // Act (agir)
+        const response = await request(app).post('/api/tasks').send(taskData);
+
+        // Assert (verificar)
+        expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST); // Espera erro de validação
+        expect(response.body).toEqual(
+            expect.objectContaining({
+                message: 'Prioridade inválida', // Ou a mensagem específica de erro que sua API retorna
+            })
+        );
+    });
+});
